@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "52ea00b0-3a43-40b7-9675-636e89661074",
+		"name": "Test SpaceX",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://api.spacexdata.com/v4/launches/latest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Validate the success response\r",
+							"pm.test(\"Test if the response is successful\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(200);\r",
+							"  pm.expect(pm.response.id).to.be.a(\"string\");\r",
+							"});\r",
+							"\r",
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"//Validate the launch is successful\r",
+							"pm.test(\"Test if the Launch is successful\", () => {\r",
+							"  pm.expect(responseJson.success).to.be.true;\r",
+							"  pm.expect(responseJson.payloads).not.to.be.empty;\r",
+							"  pm.expect(responseJson.failures).to.be.empty;\r",
+							"  pm.expect(responseJson.launch_library_id).to.be.a(\"string\")\r",
+							"  pm.expect(responseJson.flight_number).to.be.a(\"number\");\r",
+							"  pm.expect(responseJson.rocket).to.be.a(\"string\");\r",
+							"});\r",
+							"\r",
+							"//Validate the launch has the necessary details\r",
+							"pm.test(\"Test the cores in the Launch\", () => {\r",
+							"  pm.expect(responseJson.cores).not.to.be.empty;\r",
+							"  pm.expect(responseJson.cores[0].flight).to.be.a(\"number\")\r",
+							"  pm.expect(responseJson.cores[0].landing_attempt).to.be.true\r",
+							"  pm.expect(responseJson.cores[0].landpad).to.be.a(\"string\") \r",
+							"  pm.expect(responseJson.cores[0].landing_type).to.eql(\"ASDS\") \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/launches/latest",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"launches",
+						"latest"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
