@@ -1,0 +1,26 @@
+//Validate the success response
+pm.test("Test if the response is successful", () => {
+  pm.expect(pm.response.code).to.eql(200);
+  pm.expect(pm.response.id).to.be.a("string");
+});
+
+var responseJson = pm.response.json();
+
+//Validate the launch is successful
+pm.test("Test if the Launch is successful", () => {
+  pm.expect(responseJson.success).to.be.true;
+  pm.expect(responseJson.payloads).not.to.be.empty;
+  pm.expect(responseJson.failures).to.be.empty;
+  pm.expect(responseJson.launch_library_id).to.be.a("string")
+  pm.expect(responseJson.flight_number).to.be.a("number");
+  pm.expect(responseJson.rocket).to.be.a("string");
+});
+
+//Validate the launch has the necessary details
+pm.test("Test the cores in the Launch", () => {
+  pm.expect(responseJson.cores).not.to.be.empty;
+  pm.expect(responseJson.cores[0].flight).to.be.a("number")
+  pm.expect(responseJson.cores[0].landing_attempt).to.be.true
+  pm.expect(responseJson.cores[0].landpad).to.be.a("string") 
+  pm.expect(responseJson.cores[0].landing_type).to.eql("ASDS") 
+});
